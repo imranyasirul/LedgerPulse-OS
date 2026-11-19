@@ -208,6 +208,31 @@ main section.rounded-2xl:hover {
   }
 }
 
+/* অফিশিয়াল বোর্ডরুম পিডিএফ প্রিন্ট স্টাইল */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+
+  html,
+  body,
+  main {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  main section.rounded-2xl,
+  main div.rounded-2xl {
+    box-shadow: none !important;
+    transform: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
 /* কাস্টম স্লিক স্ক্রলবার */
 ::-webkit-scrollbar {
   width: 6px;

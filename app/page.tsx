@@ -36,6 +36,10 @@ import ExecutiveAudioBriefing from "@/components/ExecutiveAudioBriefing";
 import ForensicAuditCard from "@/components/ForensicAuditCard";
 import BreakEvenRadar from "@/components/BreakEvenRadar";
 import NotificationCenter from "@/components/NotificationCenter";
+import {
+  BoardroomPrintHeader,
+  BoardroomPrintFooter,
+} from "@/components/BoardroomPrintLayout";
 import InventoryPage from "@/components/pages/InventoryPage";
 import BranchComparisonPage from "@/components/pages/BranchComparisonPage";
 import ExpenseTaxVaultPage from "@/components/pages/ExpenseTaxVaultPage";
@@ -396,8 +400,19 @@ export default function DashboardPage() {
         dbConnected={dbConnected}
       />
 
-      <main className="flex-1 p-5 sm:p-7 md:p-8 overflow-y-auto bg-[#f4f7fb] dark:bg-[#060a16] print:p-2 print:bg-white">
+      <main className="flex-1 p-5 sm:p-7 md:p-8 overflow-y-auto bg-[#f4f7fb] dark:bg-[#060a16] print:p-0 print:bg-white">
         <div className="max-w-7xl mx-auto space-y-6">
+          {/* অফিশিয়াল বোর্ডরুম পিডিএফ প্রিন্ট হেডার */}
+          <BoardroomPrintHeader
+            reportTitle={currentMeta.title}
+            selectedStore={selectedStore}
+            selectedCategory={selectedCategory}
+            datePreset={datePreset}
+            recordCount={filteredRecords.length}
+            healthGrade={healthGrade}
+            currentUser={currentUser}
+          />
+
           {/* এক্সিকিউটিভ টেলিমেট্রি রিবন */}
           <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs text-xs print:hidden">
             <div className="flex items-center gap-2.5 text-slate-600 dark:text-slate-300">
@@ -419,7 +434,7 @@ export default function DashboardPage() {
           </div>
 
           {/* হাই-কনট্রাস্ট পেজ হেডার */}
-          <header className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
+          <header className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800 print:hidden">
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {currentMeta.title}
@@ -443,7 +458,7 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5 print:hidden">
+            <div className="flex flex-wrap items-center gap-2.5">
               <button
                 type="button"
                 onClick={() => setIsCommandOpen(true)}
@@ -539,7 +554,6 @@ export default function DashboardPage() {
           {/* ক্যাটাগরি ও তারিখ ফিল্টার বার */}
           <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3 print:hidden">
             <div className="flex flex-wrap items-center gap-2.5">
-              {/* ক্যাটাগরি ড্রপডাউন */}
               <div className="flex items-center gap-2">
                 <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400">
                   <Filter className="w-3.5 h-3.5" />
@@ -563,7 +577,6 @@ export default function DashboardPage() {
                 |
               </span>
 
-              {/* তারিখ প্রিসেট বাটনসমূহ */}
               <div className="flex flex-wrap items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-indigo-500 dark:text-cyan-400 mr-0.5" />
                 {(
@@ -589,7 +602,6 @@ export default function DashboardPage() {
                 ))}
               </div>
 
-              {/* কাস্টম তারিখ নির্বাচন ইনপুট */}
               {datePreset === "CUSTOM" && (
                 <div className="flex items-center gap-1.5">
                   <input
@@ -664,18 +676,22 @@ export default function DashboardPage() {
           <div key={activeTab} className="space-y-6 animate-page-enter">
             {activeTab === "overview" && (
               <>
-                <ExecutiveAudioBriefing
-                  summary={summary}
-                  analytics={enterpriseAnalytics}
-                  selectedStore={selectedStore}
-                  recordCount={filteredRecords.length}
-                />
+                <div className="print:hidden">
+                  <ExecutiveAudioBriefing
+                    summary={summary}
+                    analytics={enterpriseAnalytics}
+                    selectedStore={selectedStore}
+                    recordCount={filteredRecords.length}
+                  />
+                </div>
                 <RevenueGoalTracker
                   currentRevenue={summary.totalRevenue}
                   transactionCount={filteredRecords.length}
                 />
                 <BreakEvenRadar summary={summary} />
-                <WhatIfSimulator summary={summary} />
+                <div className="print:hidden">
+                  <WhatIfSimulator summary={summary} />
+                </div>
                 <BusinessInsights data={filteredRecords} />
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
@@ -693,7 +709,9 @@ export default function DashboardPage() {
             {activeTab === "forecasting" && (
               <>
                 <BreakEvenRadar summary={summary} />
-                <WhatIfSimulator summary={summary} />
+                <div className="print:hidden">
+                  <WhatIfSimulator summary={summary} />
+                </div>
                 <ForecastAndPareto analytics={enterpriseAnalytics} />
               </>
             )}
@@ -740,6 +758,9 @@ export default function DashboardPage() {
               />
             )}
           </div>
+
+          {/* অফিশিয়াল বোর্ডরুম পিডিএফ প্রিন্ট ফুটার */}
+          <BoardroomPrintFooter currentUser={currentUser} />
         </div>
       </main>
 
