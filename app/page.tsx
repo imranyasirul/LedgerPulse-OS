@@ -36,6 +36,7 @@ import InventoryPage from "@/components/pages/InventoryPage";
 import BranchComparisonPage from "@/components/pages/BranchComparisonPage";
 import ExpenseTaxVaultPage from "@/components/pages/ExpenseTaxVaultPage";
 import CustomerCrmPage from "@/components/pages/CustomerCrmPage";
+import InvoiceStudioPage from "@/components/pages/InvoiceStudioPage";
 import {
   calculateKpiWithGrowth,
   runEnterpriseAnalytics,
@@ -69,6 +70,10 @@ const PAGE_TITLES: Record<ActiveTab, { title: string; subtitle: string }> = {
   branches: {
     title: "Branch & Channel Performance Arena",
     subtitle: "Head-to-head margin, AOV & revenue benchmark across business units",
+  },
+  invoices: {
+    title: "Smart Invoice & Deal Profit Studio",
+    subtitle: "Client receipt generator with secret margin guardrails & 1-click ledger sync",
   },
   inventory: {
     title: "Smart Inventory & Stock Velocity",
@@ -327,12 +332,11 @@ export default function DashboardPage() {
 
       <main className="flex-1 p-6 md:p-8 overflow-y-auto print:p-2">
         <div className="max-w-7xl mx-auto space-y-6">
-          {/* ইউনিক এক্সিকিউটিভ কমান্ড রিবন */}
           <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-xs print:hidden">
             <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-             <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">
-  LedgerPulse OS //
-</span>
+              <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">
+                AURABI OS //
+              </span>
               <span>{currentMeta.subtitle}</span>
             </div>
 
@@ -522,6 +526,14 @@ export default function DashboardPage() {
 
           {activeTab === "branches" && (
             <BranchComparisonPage records={records} />
+          )}
+
+          {activeTab === "invoices" && (
+            <InvoiceStudioPage
+              records={records}
+              onRecordSale={handleQuickAddRecord}
+              canEdit={canEdit}
+            />
           )}
 
           {activeTab === "inventory" && (

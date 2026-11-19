@@ -14,6 +14,7 @@ import {
   GitCompareArrows,
   Receipt,
   Users,
+  FileText,
 } from "lucide-react";
 import { UserSession } from "@/types/analytics";
 
@@ -24,6 +25,7 @@ export type ActiveTab =
   | "branches"
   | "expenses"
   | "customers"
+  | "invoices"
   | "ledger"
   | "webhooks";
 
@@ -72,6 +74,7 @@ export default function Sidebar({
     {
       title: "Operations & Finance",
       items: [
+        { id: "invoices", label: "Smart Invoice Studio", icon: FileText },
         { id: "inventory", label: "Smart Inventory", icon: Package },
         { id: "expenses", label: "OpEx & Tax Vault", icon: Receipt },
         { id: "customers", label: "Customer CRM & LTV", icon: Users },
@@ -106,8 +109,8 @@ export default function Sidebar({
         </div>
         <div>
           <span className="font-extrabold text-base tracking-tight block">
- LedgerPulse <span className="text-blue-400">OS</span>
-</span>
+            AuraBI <span className="text-blue-400">OS</span>
+          </span>
           <span className="text-[11px] text-slate-400">
             Enterprise ERP &amp; BI Suite
           </span>
