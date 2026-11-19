@@ -326,7 +326,7 @@ export default function DashboardPage() {
   const currentMeta = PAGE_TITLES[activeTab];
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50/80 via-[#f4f7fb] to-slate-100/90 dark:from-blue-950/30 dark:via-[#060a16] dark:to-[#04070f] flex flex-col lg:flex-row transition-colors duration-300 print:bg-white">
+    <div className="min-h-screen bg-[#f4f7fb] dark:bg-[#060a16] text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row transition-colors duration-300 print:bg-white">
       <Sidebar
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -340,32 +340,32 @@ export default function DashboardPage() {
         dbConnected={dbConnected}
       />
 
-      <main className="flex-1 p-5 sm:p-7 md:p-8 overflow-y-auto print:p-2">
+      <main className="flex-1 p-5 sm:p-7 md:p-8 overflow-y-auto bg-[#f4f7fb] dark:bg-[#060a16] print:p-2 print:bg-white">
         <div className="max-w-7xl mx-auto space-y-6">
-          {/* গ্লাসমরফিক এক্সিকিউটিভ টেলিমেট্রি রিবন */}
-          <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 rounded-2xl bg-white/80 dark:bg-slate-900/75 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/90 shadow-xs text-xs print:hidden">
+          {/* এক্সিকিউটিভ টেলিমেট্রি রিবন */}
+          <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs text-xs print:hidden">
             <div className="flex items-center gap-2.5 text-slate-600 dark:text-slate-300">
               <span className="inline-flex items-center gap-1.5 font-mono font-bold text-emerald-600 dark:text-emerald-400">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                 LIVE
               </span>
               <span className="text-slate-300 dark:text-slate-700">|</span>
-              <span className="font-mono font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
+              <span className="font-mono font-bold text-blue-600 dark:text-cyan-400">
                 LEDGERPLUS OS //
               </span>
               <span className="truncate">{currentMeta.subtitle}</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-mono text-[11px] font-bold bg-gradient-to-r from-emerald-500/10 to-teal-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 shadow-2xs">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-mono text-[11px] font-bold bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
               <Award className="w-3.5 h-3.5 text-emerald-500" />
               Credit &amp; Margin Grade: {healthGrade}
             </div>
           </div>
 
-          {/* প্রিমিয়াম গ্র্যাডিয়েন্ট হেডার */}
-          <header className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 pb-5 border-b border-slate-200/80 dark:border-slate-800/80">
+          {/* হাই-কনট্রাস্ট পেজ হেডার */}
+          <header className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-900 dark:from-white dark:via-blue-100 dark:to-cyan-200 bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {currentMeta.title}
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 flex flex-wrap items-center gap-2">
@@ -391,11 +391,11 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => setIsCommandOpen(true)}
-                className="inline-flex items-center gap-2.5 px-3.5 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-700/90 rounded-xl hover:border-blue-400 dark:hover:border-blue-500/60 shadow-2xs transition active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-2.5 px-3.5 py-2 text-xs font-semibold text-slate-600 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-blue-400 dark:hover:border-blue-500/60 shadow-2xs transition active:scale-95 cursor-pointer"
               >
-                <Search className="w-3.5 h-3.5 text-blue-500" />
+                <Search className="w-3.5 h-3.5 text-blue-500 dark:text-cyan-400" />
                 <span>Quick Search...</span>
-                <kbd className="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                <kbd className="font-mono text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                   Ctrl K
                 </kbd>
               </button>
@@ -404,7 +404,7 @@ export default function DashboardPage() {
                 type="button"
                 onClick={toggleDarkMode}
                 aria-label="Toggle Dark Mode"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200/90 dark:border-slate-700/90 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-slate-700 dark:text-amber-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-2xs transition active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-amber-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-2xs transition active:scale-95 cursor-pointer"
               >
                 {isDark ? (
                   <>
@@ -462,8 +462,8 @@ export default function DashboardPage() {
                   onClick={() => setActiveTab(tabKey)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                     active
-                      ? "bg-slate-900 dark:bg-blue-600 text-white shadow-sm shadow-blue-600/20 scale-[1.02]"
-                      : "bg-white/80 dark:bg-slate-900/70 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-800"
+                      ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30 scale-[1.02]"
+                      : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
                   }`}
                 >
                   {PAGE_TITLES[tabKey].shortLabel}
@@ -472,8 +472,8 @@ export default function DashboardPage() {
             })}
           </div>
 
-          {/* গ্লাসমরফিক ফিল্টার ও এক্সপোর্ট বার */}
-          <div className="bg-white/85 dark:bg-slate-900/80 backdrop-blur-xl p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800/90 shadow-xs flex flex-wrap items-center justify-between gap-3 print:hidden">
+          {/* ফিল্টার ও এক্সপোর্ট বার */}
+          <div className="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3 print:hidden">
             <div className="flex items-center gap-2.5">
               <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400">
                 <Filter className="w-3.5 h-3.5" />
@@ -488,7 +488,7 @@ export default function DashboardPage() {
                 id="category-filter"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="text-xs font-semibold border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 bg-slate-50/90 dark:bg-slate-800/90 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                className="text-xs font-semibold border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -516,7 +516,7 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={handleExportCsv}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 px-3.5 py-1.5 rounded-xl transition active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3.5 py-1.5 rounded-xl transition active:scale-95 cursor-pointer"
               >
                 <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 Export CSV
@@ -525,7 +525,7 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 px-3.5 py-1.5 rounded-xl transition active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3.5 py-1.5 rounded-xl transition active:scale-95 cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                 Save PDF

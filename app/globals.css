@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+html,
+body {
+  background-color: #f4f7fb;
+  color: #0f172a;
+}
+
+html.dark,
+html.dark body {
+  background-color: #060a16 !important;
+  color: #f8fafc !important;
+  color-scheme: dark;
+}
+
 @keyframes fadeSlideUp {
   0% {
     opacity: 0;
@@ -17,7 +30,8 @@
 }
 
 /* সব সেকশন কার্ডে প্রিমিয়াম হোভার এলিভেশন ও গ্লো */
-main section.rounded-2xl {
+main section.rounded-2xl,
+main div.rounded-2xl {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.25s ease;
@@ -25,137 +39,139 @@ main section.rounded-2xl {
 
 main section.rounded-2xl:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px -10px rgba(37, 99, 235, 0.12),
-    0 4px 12px -4px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 14px 30px -10px rgba(37, 99, 235, 0.14),
+    0 4px 12px -4px rgba(15, 23, 42, 0.06);
 }
 
 .dark main section.rounded-2xl:hover {
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 16px 36px -12px rgba(37, 99, 235, 0.22),
-    0 0 0 1px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 16px 36px -12px rgba(37, 99, 235, 0.25),
+    0 0 0 1px rgba(99, 102, 241, 0.2);
 }
 
-/* ডার্ক মোডে সব পেজ, কার্ড, টেবিল ও চার্টের ফন্ট হাই-কনট্রাস্ট ও স্পষ্ট রাখা */
+/* ডার্ক মোডে সব সাদা/হালকা কার্ড, গ্র্যাডিয়েন্ট ও ফন্ট একদম স্পষ্ট রাখা */
 @media screen {
-  .dark main .bg-white,
-  .dark [role="dialog"] .bg-white,
-  .dark .fixed .bg-white {
+  .dark main [class*="bg-white"],
+  .dark .fixed [class*="bg-white"] {
     background-color: #0f172a !important;
   }
 
-  .dark main .bg-slate-50,
-  .dark main .bg-slate-50\/80,
-  .dark main .bg-slate-50\/70,
-  .dark main .bg-slate-50\/60,
-  .dark main .bg-gray-50,
-  .dark .fixed .bg-slate-50 {
-    background-color: rgba(30, 41, 59, 0.78) !important;
+  .dark main [class*="from-white"],
+  .dark main [class*="from-slate-50"] {
+    --tw-gradient-from: #0f172a !important;
   }
 
-  .dark main .bg-slate-100,
-  .dark main .bg-slate-100\/80,
-  .dark main .bg-slate-100\/90,
-  .dark main .bg-gray-100,
-  .dark .fixed .bg-slate-100 {
+  .dark main [class*="to-white"],
+  .dark main [class*="to-slate-50"] {
+    --tw-gradient-to: #162033 !important;
+  }
+
+  .dark main [class*="bg-slate-50"],
+  .dark main [class*="bg-gray-50"],
+  .dark .fixed [class*="bg-slate-50"] {
+    background-color: #162033 !important;
+  }
+
+  .dark main [class*="bg-slate-100"],
+  .dark main [class*="bg-gray-100"],
+  .dark .fixed [class*="bg-slate-100"] {
     background-color: #1e293b !important;
   }
 
-  .dark main .border-slate-200,
-  .dark main .border-slate-200\/80,
-  .dark main .border-slate-200\/70,
-  .dark main .border-slate-100,
-  .dark main .border-gray-200,
-  .dark .fixed .border-slate-200 {
-    border-color: rgba(51, 65, 85, 0.85) !important;
+  .dark main [class*="border-slate-200"],
+  .dark main [class*="border-slate-100"],
+  .dark main [class*="border-gray-200"],
+  .dark .fixed [class*="border-slate-200"] {
+    border-color: rgba(51, 65, 85, 0.9) !important;
   }
 
-  /* প্রধান ও গৌণ ফন্টের উজ্জ্বলতা নিশ্চিত করা */
-  .dark main .text-slate-950,
-  .dark main .text-slate-900,
-  .dark main .text-gray-900,
-  .dark main .text-black,
-  .dark .fixed .text-slate-900 {
+  /* সব গাঢ় রঙের ফন্টকে ডার্ক মোডে উজ্জ্বল সাদা/রুপালি করা */
+  .dark main [class*="text-slate-950"],
+  .dark main [class*="text-slate-900"],
+  .dark main [class*="text-gray-900"],
+  .dark main [class*="text-black"],
+  .dark .fixed [class*="text-slate-900"] {
     color: #f8fafc !important;
   }
 
-  .dark main .text-slate-800,
-  .dark main .text-gray-800,
-  .dark .fixed .text-slate-800 {
+  .dark main [class*="text-slate-800"],
+  .dark main [class*="text-gray-800"],
+  .dark .fixed [class*="text-slate-800"] {
     color: #f1f5f9 !important;
   }
 
-  .dark main .text-slate-700,
-  .dark main .text-gray-700,
-  .dark .fixed .text-slate-700 {
+  .dark main [class*="text-slate-700"],
+  .dark main [class*="text-gray-700"],
+  .dark .fixed [class*="text-slate-700"] {
     color: #e2e8f0 !important;
   }
 
-  .dark main .text-slate-600,
-  .dark main .text-gray-600,
-  .dark .fixed .text-slate-600 {
+  .dark main [class*="text-slate-600"],
+  .dark main [class*="text-gray-600"],
+  .dark .fixed [class*="text-slate-600"] {
     color: #cbd5e1 !important;
   }
 
-  .dark main .text-slate-500,
-  .dark main .text-gray-500,
-  .dark main .text-slate-400,
-  .dark main .text-gray-400,
-  .dark .fixed .text-slate-500 {
+  .dark main [class*="text-slate-500"],
+  .dark main [class*="text-gray-500"],
+  .dark main [class*="text-slate-400"],
+  .dark main [class*="text-gray-400"],
+  .dark .fixed [class*="text-slate-500"] {
     color: #94a3b8 !important;
   }
 
-  /* রঙিন ব্যাজ ও অ্যালার্ট বক্সগুলোর কনট্রাস্ট ঠিক রাখা */
-  .dark main .bg-blue-50 {
+  /* রঙিন ব্যাজ ও স্ট্যাটাস কার্ডগুলোর কনট্রাস্ট ঠিক রাখা */
+  .dark main [class*="bg-blue-50"] {
     background-color: rgba(59, 130, 246, 0.16) !important;
   }
-  .dark main .text-blue-800,
-  .dark main .text-blue-700,
-  .dark main .text-blue-600 {
+  .dark main [class*="text-blue-800"],
+  .dark main [class*="text-blue-700"],
+  .dark main [class*="text-blue-600"] {
     color: #93c5fd !important;
   }
 
-  .dark main .bg-emerald-50 {
+  .dark main [class*="bg-emerald-50"] {
     background-color: rgba(16, 185, 129, 0.16) !important;
   }
-  .dark main .text-emerald-800,
-  .dark main .text-emerald-700,
-  .dark main .text-emerald-600 {
+  .dark main [class*="text-emerald-800"],
+  .dark main [class*="text-emerald-700"],
+  .dark main [class*="text-emerald-600"] {
     color: #6ee7b7 !important;
   }
 
-  .dark main .bg-amber-50 {
+  .dark main [class*="bg-amber-50"] {
     background-color: rgba(245, 158, 11, 0.16) !important;
   }
-  .dark main .text-amber-800,
-  .dark main .text-amber-700,
-  .dark main .text-amber-600 {
+  .dark main [class*="text-amber-800"],
+  .dark main [class*="text-amber-700"],
+  .dark main [class*="text-amber-600"] {
     color: #fcd34d !important;
   }
 
-  .dark main .bg-rose-50 {
+  .dark main [class*="bg-rose-50"] {
     background-color: rgba(244, 63, 94, 0.16) !important;
   }
-  .dark main .text-rose-800,
-  .dark main .text-rose-700,
-  .dark main .text-rose-600 {
+  .dark main [class*="text-rose-800"],
+  .dark main [class*="text-rose-700"],
+  .dark main [class*="text-rose-600"] {
     color: #fda4af !important;
   }
 
-  .dark main .bg-indigo-50 {
+  .dark main [class*="bg-indigo-50"] {
     background-color: rgba(99, 102, 241, 0.16) !important;
   }
-  .dark main .text-indigo-800,
-  .dark main .text-indigo-700,
-  .dark main .text-indigo-600 {
+  .dark main [class*="text-indigo-800"],
+  .dark main [class*="text-indigo-700"],
+  .dark main [class*="text-indigo-600"] {
     color: #a5b4fc !important;
   }
 
-  .dark main .bg-purple-50 {
+  .dark main [class*="bg-purple-50"] {
     background-color: rgba(168, 85, 247, 0.16) !important;
   }
-  .dark main .text-purple-800,
-  .dark main .text-purple-700,
-  .dark main .text-purple-600 {
+  .dark main [class*="text-purple-800"],
+  .dark main [class*="text-purple-700"],
+  .dark main [class*="text-purple-600"] {
     color: #d8b4fe !important;
   }
 
@@ -175,13 +191,14 @@ main section.rounded-2xl:hover {
 
   /* চার্টের লেখা ও টুলটিপ ডার্ক মোডে স্পষ্ট করা */
   .dark .recharts-cartesian-axis-tick-value tspan,
+  .dark .recharts-text,
   .dark .recharts-legend-item-text {
     fill: #cbd5e1 !important;
     color: #cbd5e1 !important;
   }
 
   .dark .recharts-cartesian-grid line {
-    stroke: rgba(148, 163, 184, 0.15) !important;
+    stroke: rgba(148, 163, 184, 0.16) !important;
   }
 
   .dark .recharts-default-tooltip {
