@@ -16,6 +16,7 @@ import {
   Sparkles,
   Calendar,
   X,
+  Compass,
 } from "lucide-react";
 import Sidebar, { ActiveTab } from "@/components/Sidebar";
 import KpiSection from "@/components/KpiSection";
@@ -40,6 +41,11 @@ import {
   BoardroomPrintHeader,
   BoardroomPrintFooter,
 } from "@/components/BoardroomPrintLayout";
+import AuditTrailCard, {
+  AuditCategory,
+  AuditLogEntry,
+} from "@/components/AuditTrailCard";
+import GuidedTourModal from "@/components/GuidedTourModal";
 import InventoryPage from "@/components/pages/InventoryPage";
 import BranchComparisonPage from "@/components/pages/BranchComparisonPage";
 import ExpenseTaxVaultPage from "@/components/pages/ExpenseTaxVaultPage";
@@ -64,6 +70,19 @@ const INITIAL_DATA: SalesRecord[] = [
   { id: "10", date: "2026-11-10", product: "Canvas Tote Bag", category: "Accessories", store: "Online E-Commerce", revenue: 520, cost: 340, profit: 180 },
   { id: "11", date: "2026-11-11", product: "Air High-Top Sneakers", category: "Footwear", store: "Retail Flagship", revenue: 2850, cost: 1550, profit: 1300 },
   { id: "12", date: "2026-11-12", product: "Smart Watch Pro", category: "Gadgets", store: "Online E-Commerce", revenue: 3100, cost: 1700, profit: 1400 },
+];
+
+const INITIAL_AUDIT_LOGS: AuditLogEntry[] = [
+  {
+    id: "boot-1",
+    timestamp: "Session Boot",
+    actor: "Yasirul Islam Imran",
+    role: "OWNER",
+    category: "SECURITY",
+    action: "Executive Workspace Initialized",
+    detail: "Loaded 12 baseline ledger records with Benford forensic verification active.",
+    hash: "9F4A2C1E",
+  },
 ];
 
 const PAGE_TITLES: Record<ActiveTab, { title: string; shortLabel: string; subtitle: string }> = {
@@ -123,6 +142,15 @@ function shiftIsoDate(isoDate: string, daysDelta: number): string {
   return dt.toISOString().split("T")[0];
 }
 
+function createShortDigest(input: string): string {
+  let hash = 2166136261;
+  for (let i = 0; i < input.length; i++) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16).toUpperCase().padStart(8, "0");
+}
+
 function subscribeTheme(callback: () => void) {
   window.addEventListener("storage", callback);
   window.addEventListener("ledgerplus-theme-change", callback);
@@ -142,6 +170,7 @@ function getServerThemeSnapshot(): boolean {
 
 export default function DashboardPage() {
   const [records, setRecords] = useState<SalesRecord[]>(INITIAL_DATA);
+  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(INITIAL_AUDIT_LOGS);
   const [activeTab, setActiveTab] = useState<ActiveTab>("overview");
   const [selectedStore, setSelectedStore] = useState<string>("All");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -154,12 +183,44 @@ export default function DashboardPage() {
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [isCommandOpen, setIsCommandOpen] = useState<boolean>(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState<boolean>(false);
+  const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
   const [dbConnected, setDbConnected] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserSession>({
     name: "Yasirul Islam Imran",
     email: "imran@ledgerplus.io",
     role: "OWNER",
   });
+
+  const appendAuditEvent = (
+    category: AuditCategory,
+    action: string,
+    detail: string,
+    actorOverride?: UserSession
+  ) => {
+    const actorUser = actorOverride ?? currentUser;
+    const now = new Date();
+    const timestamp = now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    const entryId = `audit-${now.getTime()}-${Math.random().toString(36).slice(2, 6)}`;
+    const hash = createShortDigest(`${entryId}|${actorUser.name}|${action}|${detail}`);
+
+    setAuditLogs((prev) => [
+      {
+        id: entryId,
+        timestamp,
+        actor: actorUser.name,
+        role: actorUser.role,
+        category,
+        action,
+        detail,
+        hash,
+      },
+      ...prev,
+    ]);
+  };
 
   const isDark = useSyncExternalStore(
     subscribeTheme,
@@ -307,6 +368,11 @@ export default function DashboardPage() {
     setSelectedStore("All");
     clearFilters();
     setIsCustomData(true);
+    appendAuditEvent(
+      "DATA",
+      "Bulk CSV Dataset Imported",
+      `Ingested ${newRecords.length} verified rows into active workspace.`
+    );
 
     try {
       await fetch("/api/records", {
@@ -322,6 +388,11 @@ export default function DashboardPage() {
   const handleQuickAddRecord = async (newRecord: SalesRecord) => {
     setRecords((prev) => [newRecord, ...prev]);
     setIsCustomData(true);
+    appendAuditEvent(
+      "TRANSACTION",
+      `Sale Recorded: ${newRecord.product}`,
+      `Revenue $${newRecord.revenue.toLocaleString()} • Profit $${newRecord.profit.toLocaleString()} (${newRecord.store || "Primary Store"})`
+    );
 
     try {
       await fetch("/api/records", {
@@ -338,6 +409,11 @@ export default function DashboardPage() {
     setRecords((prev) => [newRecord, ...prev]);
     setWebhookCount((c) => c + 1);
     setIsCustomData(true);
+    appendAuditEvent(
+      "DATA",
+      `Webhook Sale Ingested: ${newRecord.product}`,
+      `Automated API checkout for $${newRecord.revenue.toLocaleString()} captured.`
+    );
   };
 
   const handleReset = async () => {
@@ -347,6 +423,11 @@ export default function DashboardPage() {
     clearFilters();
     setIsCustomData(false);
     setWebhookCount(0);
+    appendAuditEvent(
+      "DATA",
+      "Workspace Reset to Baseline",
+      "Restored 12 audited seed transactions by Owner authorization."
+    );
 
     if (dbConnected) {
       try {
@@ -380,6 +461,31 @@ export default function DashboardPage() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+
+    appendAuditEvent(
+      "REPORT",
+      "CSV Ledger Exported",
+      `Downloaded ${filteredRecords.length} filtered rows (${selectedStore}).`
+    );
+  };
+
+  const handlePrintBoardroomPdf = () => {
+    appendAuditEvent(
+      "REPORT",
+      "Boardroom PDF Report Generated",
+      `Formatted executive brief for ${PAGE_TITLES[activeTab].shortLabel} module.`
+    );
+    window.print();
+  };
+
+  const handleStartGuidedTour = () => {
+    setActiveTab("overview");
+    setIsTourOpen(true);
+    appendAuditEvent(
+      "SECURITY",
+      "Interactive Product Tour Launched",
+      "Started 6-step guided walkthrough across executive modules."
+    );
   };
 
   const canEdit = currentUser.role !== "VIEWER";
@@ -459,6 +565,15 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={handleStartGuidedTour}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-blue-700 dark:text-cyan-300 bg-blue-50 dark:bg-blue-500/15 border border-blue-200 dark:border-blue-500/30 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-500/25 shadow-2xs transition active:scale-95 cursor-pointer"
+              >
+                <Compass className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                <span>Product Tour</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setIsCommandOpen(true)}
@@ -661,7 +776,7 @@ export default function DashboardPage() {
 
               <button
                 type="button"
-                onClick={() => window.print()}
+                onClick={handlePrintBoardroomPdf}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3.5 py-1.5 rounded-xl transition active:scale-95 cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
@@ -746,6 +861,7 @@ export default function DashboardPage() {
             {activeTab === "ledger" && (
               <>
                 <ForensicAuditCard records={filteredRecords} />
+                <AuditTrailCard logs={auditLogs} />
                 <SalesTable data={filteredRecords} />
               </>
             )}
@@ -777,7 +893,15 @@ export default function DashboardPage() {
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         currentUser={currentUser}
-        onAuthenticated={(user) => setCurrentUser(user)}
+        onAuthenticated={(user) => {
+          setCurrentUser(user);
+          appendAuditEvent(
+            "SECURITY",
+            "User Clearance Switched",
+            `Active session role updated to ${user.role} (${user.email}).`,
+            user
+          );
+        }}
       />
 
       <CommandPalette
@@ -798,6 +922,13 @@ export default function DashboardPage() {
         isOpen={isQuickAddOpen}
         onClose={() => setIsQuickAddOpen(false)}
         onAddRecord={handleQuickAddRecord}
+      />
+
+      <GuidedTourModal
+        isOpen={isTourOpen}
+        onClose={() => setIsTourOpen(false)}
+        onNavigateTab={setActiveTab}
+        onOpenAiAnalyst={() => setIsAiOpen(true)}
       />
     </div>
   );
