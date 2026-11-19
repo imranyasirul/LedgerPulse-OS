@@ -35,6 +35,162 @@ main section.rounded-2xl:hover {
     0 0 0 1px rgba(99, 102, 241, 0.15);
 }
 
+/* ডার্ক মোডে সব পেজ, কার্ড, টেবিল ও চার্টের ফন্ট হাই-কনট্রাস্ট ও স্পষ্ট রাখা */
+@media screen {
+  .dark main .bg-white,
+  .dark [role="dialog"] .bg-white,
+  .dark .fixed .bg-white {
+    background-color: #0f172a !important;
+  }
+
+  .dark main .bg-slate-50,
+  .dark main .bg-slate-50\/80,
+  .dark main .bg-slate-50\/70,
+  .dark main .bg-slate-50\/60,
+  .dark main .bg-gray-50,
+  .dark .fixed .bg-slate-50 {
+    background-color: rgba(30, 41, 59, 0.78) !important;
+  }
+
+  .dark main .bg-slate-100,
+  .dark main .bg-slate-100\/80,
+  .dark main .bg-slate-100\/90,
+  .dark main .bg-gray-100,
+  .dark .fixed .bg-slate-100 {
+    background-color: #1e293b !important;
+  }
+
+  .dark main .border-slate-200,
+  .dark main .border-slate-200\/80,
+  .dark main .border-slate-200\/70,
+  .dark main .border-slate-100,
+  .dark main .border-gray-200,
+  .dark .fixed .border-slate-200 {
+    border-color: rgba(51, 65, 85, 0.85) !important;
+  }
+
+  /* প্রধান ও গৌণ ফন্টের উজ্জ্বলতা নিশ্চিত করা */
+  .dark main .text-slate-950,
+  .dark main .text-slate-900,
+  .dark main .text-gray-900,
+  .dark main .text-black,
+  .dark .fixed .text-slate-900 {
+    color: #f8fafc !important;
+  }
+
+  .dark main .text-slate-800,
+  .dark main .text-gray-800,
+  .dark .fixed .text-slate-800 {
+    color: #f1f5f9 !important;
+  }
+
+  .dark main .text-slate-700,
+  .dark main .text-gray-700,
+  .dark .fixed .text-slate-700 {
+    color: #e2e8f0 !important;
+  }
+
+  .dark main .text-slate-600,
+  .dark main .text-gray-600,
+  .dark .fixed .text-slate-600 {
+    color: #cbd5e1 !important;
+  }
+
+  .dark main .text-slate-500,
+  .dark main .text-gray-500,
+  .dark main .text-slate-400,
+  .dark main .text-gray-400,
+  .dark .fixed .text-slate-500 {
+    color: #94a3b8 !important;
+  }
+
+  /* রঙিন ব্যাজ ও অ্যালার্ট বক্সগুলোর কনট্রাস্ট ঠিক রাখা */
+  .dark main .bg-blue-50 {
+    background-color: rgba(59, 130, 246, 0.16) !important;
+  }
+  .dark main .text-blue-800,
+  .dark main .text-blue-700,
+  .dark main .text-blue-600 {
+    color: #93c5fd !important;
+  }
+
+  .dark main .bg-emerald-50 {
+    background-color: rgba(16, 185, 129, 0.16) !important;
+  }
+  .dark main .text-emerald-800,
+  .dark main .text-emerald-700,
+  .dark main .text-emerald-600 {
+    color: #6ee7b7 !important;
+  }
+
+  .dark main .bg-amber-50 {
+    background-color: rgba(245, 158, 11, 0.16) !important;
+  }
+  .dark main .text-amber-800,
+  .dark main .text-amber-700,
+  .dark main .text-amber-600 {
+    color: #fcd34d !important;
+  }
+
+  .dark main .bg-rose-50 {
+    background-color: rgba(244, 63, 94, 0.16) !important;
+  }
+  .dark main .text-rose-800,
+  .dark main .text-rose-700,
+  .dark main .text-rose-600 {
+    color: #fda4af !important;
+  }
+
+  .dark main .bg-indigo-50 {
+    background-color: rgba(99, 102, 241, 0.16) !important;
+  }
+  .dark main .text-indigo-800,
+  .dark main .text-indigo-700,
+  .dark main .text-indigo-600 {
+    color: #a5b4fc !important;
+  }
+
+  .dark main .bg-purple-50 {
+    background-color: rgba(168, 85, 247, 0.16) !important;
+  }
+  .dark main .text-purple-800,
+  .dark main .text-purple-700,
+  .dark main .text-purple-600 {
+    color: #d8b4fe !important;
+  }
+
+  /* ইনপুট বক্স, ড্রপডাউন ও টেক্সট এরিয়া */
+  .dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  .dark select,
+  .dark textarea {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  /* চার্টের লেখা ও টুলটিপ ডার্ক মোডে স্পষ্ট করা */
+  .dark .recharts-cartesian-axis-tick-value tspan,
+  .dark .recharts-legend-item-text {
+    fill: #cbd5e1 !important;
+    color: #cbd5e1 !important;
+  }
+
+  .dark .recharts-cartesian-grid line {
+    stroke: rgba(148, 163, 184, 0.15) !important;
+  }
+
+  .dark .recharts-default-tooltip {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+  }
+}
+
 /* কাস্টম স্লিক স্ক্রলবার */
 ::-webkit-scrollbar {
   width: 6px;

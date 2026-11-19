@@ -104,17 +104,15 @@ export default function Sidebar({
 
   return (
     <aside className="w-full lg:w-68 bg-gradient-to-b from-[#050814] via-[#090f24] to-[#050814] text-slate-100 flex flex-col shrink-0 lg:min-h-screen border-r border-slate-800/90 relative overflow-hidden print:hidden">
-      {/* অ্যাম্বিয়েন্ট টপ গ্লো */}
       <div className="pointer-events-none absolute -top-24 -left-24 w-56 h-56 rounded-full bg-blue-600/20 blur-3xl" />
 
-      {/* ব্র্যান্ড হেডার */}
       <div className="p-5 border-b border-slate-800/80 flex items-center gap-3.5 relative z-10">
         <div className="p-2.5 bg-gradient-to-br from-blue-500 via-indigo-600 to-cyan-500 rounded-xl shadow-lg shadow-blue-600/30 ring-1 ring-white/20">
           <BarChart3 className="w-5 h-5 text-white" />
         </div>
         <div>
           <span className="font-extrabold text-base tracking-tight block bg-gradient-to-r from-white via-blue-100 to-cyan-300 bg-clip-text text-transparent">
-            AuraBI <span className="text-cyan-400">OS</span>
+            LedgerPlus <span className="text-cyan-400">OS</span>
           </span>
           <span className="text-[11px] text-slate-400 font-medium">
             Enterprise ERP &amp; BI Suite
@@ -122,7 +120,6 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* ওয়ার্কস্পেস সিলেক্টর */}
       <div className="p-4 border-b border-slate-800/80 relative z-10">
         <label
           htmlFor="workspace-select"
@@ -145,7 +142,6 @@ export default function Sidebar({
         </select>
       </div>
 
-      {/* নেভিগেশন মেনু */}
       <nav className="p-3.5 space-y-5 flex-1 overflow-y-auto relative z-10">
         {navGroups.map((group) => (
           <div key={group.title} className="space-y-1">
@@ -190,7 +186,6 @@ export default function Sidebar({
           </div>
         ))}
 
-        {/* এআই কোপাইলট বাটন */}
         <div className="pt-3 border-t border-slate-800/80">
           <button
             type="button"
@@ -204,7 +199,6 @@ export default function Sidebar({
         </div>
       </nav>
 
-      {/* ফুটার ও প্রোফাইল কার্ড */}
       <div className="p-4 border-t border-slate-800/80 space-y-3 bg-slate-950/70 backdrop-blur-md relative z-10">
         <div className="flex items-center justify-between text-[11px] px-1">
           <span className="flex items-center gap-2 text-slate-300 font-medium">

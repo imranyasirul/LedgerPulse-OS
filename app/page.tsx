@@ -109,15 +109,15 @@ const PAGE_TITLES: Record<ActiveTab, { title: string; shortLabel: string; subtit
 
 function subscribeTheme(callback: () => void) {
   window.addEventListener("storage", callback);
-  window.addEventListener("aurabi-theme-change", callback);
+  window.addEventListener("ledgerplus-theme-change", callback);
   return () => {
     window.removeEventListener("storage", callback);
-    window.removeEventListener("aurabi-theme-change", callback);
+    window.removeEventListener("ledgerplus-theme-change", callback);
   };
 }
 
 function getThemeSnapshot(): boolean {
-  return localStorage.getItem("aurabi-theme") === "dark";
+  return localStorage.getItem("ledgerplus-theme") === "dark";
 }
 
 function getServerThemeSnapshot(): boolean {
@@ -138,7 +138,7 @@ export default function DashboardPage() {
   const [dbConnected, setDbConnected] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserSession>({
     name: "Yasirul Islam Imran",
-    email: "imran@aurabi.io",
+    email: "imran@ledgerplus.io",
     role: "OWNER",
   });
 
@@ -166,8 +166,8 @@ export default function DashboardPage() {
 
   const toggleDarkMode = () => {
     const next = !isDark;
-    localStorage.setItem("aurabi-theme", next ? "dark" : "light");
-    window.dispatchEvent(new Event("aurabi-theme-change"));
+    localStorage.setItem("ledgerplus-theme", next ? "dark" : "light");
+    window.dispatchEvent(new Event("ledgerplus-theme-change"));
   };
 
   useEffect(() => {
@@ -314,7 +314,7 @@ export default function DashboardPage() {
     link.href = url;
     link.setAttribute(
       "download",
-      `enterprise-bi-${selectedStore.toLowerCase().replace(/\s+/g, "-")}.csv`
+      `ledgerplus-os-${selectedStore.toLowerCase().replace(/\s+/g, "-")}.csv`
     );
     document.body.appendChild(link);
     link.click();
@@ -351,7 +351,7 @@ export default function DashboardPage() {
               </span>
               <span className="text-slate-300 dark:text-slate-700">|</span>
               <span className="font-mono font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-cyan-400 dark:to-blue-400 bg-clip-text text-transparent">
-                AURABI OS //
+                LEDGERPLUS OS //
               </span>
               <span className="truncate">{currentMeta.subtitle}</span>
             </div>
@@ -451,7 +451,7 @@ export default function DashboardPage() {
             </div>
           </header>
 
-          {/* কুইক মডিউল সুইচার পিল বার (৯টি পেজের তাৎক্ষণিক নেভিগেশন) */}
+          {/* কুইক মডিউল সুইচার পিল বার */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 print:hidden">
             {(Object.keys(PAGE_TITLES) as ActiveTab[]).map((tabKey) => {
               const active = activeTab === tabKey;

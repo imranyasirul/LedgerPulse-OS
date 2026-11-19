@@ -13,17 +13,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LedgerPulse OS | Enterprise Business Intelligence",
-  description: "Enterprise Analytics & Financial Intelligence Suite",
+  title: "LedgerPlus OS | Enterprise Business Intelligence & ERP",
+  description:
+    "Executive Financial Intelligence, Smart Invoicing, Forensic Audit & Multi-Branch ERP Suite",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
