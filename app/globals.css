@@ -1,66 +1,41 @@
 @import "tailwindcss";
-
 @custom-variant dark (&:where(.dark, .dark *));
 
-body {
-  background-color: #f6f8fa;
-  color: #0f172a;
-  -webkit-font-smoothing: antialiased;
-  transition: background-color 0.25s ease, color 0.25s ease;
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-html.dark body {
-  background-color: #070b14;
-  color: #f8fafc;
+.animate-page-enter {
+  animation: fadeSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ডার্ক মোডে সব কার্ড, চার্ট ও টেবিলের প্রিমিয়াম অবসিডিয়ান সারফেস */
-html.dark .bg-white {
-  background-color: #0f172a !important;
+/* সব সেকশন কার্ডে প্রিমিয়াম হোভার এলিভেশন ও গ্লো */
+main section.rounded-2xl {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
 }
 
-html.dark .bg-slate-50 {
-  background-color: #162033 !important;
+main section.rounded-2xl:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -10px rgba(37, 99, 235, 0.12),
+    0 4px 12px -4px rgba(15, 23, 42, 0.05);
 }
 
-html.dark .border-slate-200,
-html.dark .border-slate-200\/80,
-html.dark .border-slate-100 {
-  border-color: rgba(51, 65, 85, 0.65) !important;
+.dark main section.rounded-2xl:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 16px 36px -12px rgba(37, 99, 235, 0.22),
+    0 0 0 1px rgba(99, 102, 241, 0.15);
 }
 
-html.dark .text-slate-900 {
-  color: #f8fafc !important;
-}
-
-html.dark .text-slate-800 {
-  color: #f1f5f9 !important;
-}
-
-html.dark .text-slate-700 {
-  color: #e2e8f0 !important;
-}
-
-html.dark .text-slate-600 {
-  color: #cbd5e1 !important;
-}
-
-html.dark .text-slate-500 {
-  color: #94a3b8 !important;
-}
-
-/* ডার্ক মোডে চার্ট টুলটিপ ও অক্ষের লেখা */
-html.dark .recharts-default-tooltip {
-  background-color: #0f172a !important;
-  border-color: #334155 !important;
-  color: #f8fafc !important;
-  border-radius: 12px !important;
-}
-
-html.dark .recharts-cartesian-axis-tick-value {
-  fill: #94a3b8 !important;
-}
-
+/* কাস্টম স্লিক স্ক্রলবার */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -71,10 +46,10 @@ html.dark .recharts-cartesian-axis-tick-value {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(148, 163, 184, 0.35);
   border-radius: 9999px;
 }
 
-html.dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6);
 }
