@@ -14,6 +14,8 @@ import {
   Plus,
   Award,
   Sparkles,
+  Calendar,
+  X,
 } from "lucide-react";
 import Sidebar, { ActiveTab } from "@/components/Sidebar";
 import KpiSection from "@/components/KpiSection";
@@ -33,6 +35,7 @@ import RevenueGoalTracker from "@/components/RevenueGoalTracker";
 import ExecutiveAudioBriefing from "@/components/ExecutiveAudioBriefing";
 import ForensicAuditCard from "@/components/ForensicAuditCard";
 import BreakEvenRadar from "@/components/BreakEvenRadar";
+import NotificationCenter from "@/components/NotificationCenter";
 import InventoryPage from "@/components/pages/InventoryPage";
 import BranchComparisonPage from "@/components/pages/BranchComparisonPage";
 import ExpenseTaxVaultPage from "@/components/pages/ExpenseTaxVaultPage";
@@ -107,6 +110,15 @@ const PAGE_TITLES: Record<ActiveTab, { title: string; shortLabel: string; subtit
   },
 };
 
+type DatePreset = "ALL" | "7D" | "30D" | "CUSTOM";
+
+function shiftIsoDate(isoDate: string, daysDelta: number): string {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  if (!y || !m || !d) return isoDate;
+  const dt = new Date(Date.UTC(y, m - 1, d + daysDelta));
+  return dt.toISOString().split("T")[0];
+}
+
 function subscribeTheme(callback: () => void) {
   window.addEventListener("storage", callback);
   window.addEventListener("ledgerplus-theme-change", callback);
@@ -129,6 +141,9 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("overview");
   const [selectedStore, setSelectedStore] = useState<string>("All");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [datePreset, setDatePreset] = useState<DatePreset>("ALL");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [isCustomData, setIsCustomData] = useState<boolean>(false);
   const [webhookCount, setWebhookCount] = useState<number>(0);
   const [isAiOpen, setIsAiOpen] = useState<boolean>(false);
@@ -215,15 +230,43 @@ export default function DashboardPage() {
     return ["All", ...unique];
   }, [records]);
 
+  const latestDataDate = useMemo(() => {
+    return records.reduce((max, r) => (r.date > max ? r.date : max), "");
+  }, [records]);
+
   const filteredRecords = useMemo(() => {
+    let effectiveStart = "";
+    let effectiveEnd = "";
+
+    if (datePreset === "7D" && latestDataDate) {
+      effectiveStart = shiftIsoDate(latestDataDate, -6);
+      effectiveEnd = latestDataDate;
+    } else if (datePreset === "30D" && latestDataDate) {
+      effectiveStart = shiftIsoDate(latestDataDate, -29);
+      effectiveEnd = latestDataDate;
+    } else if (datePreset === "CUSTOM") {
+      effectiveStart = startDate;
+      effectiveEnd = endDate;
+    }
+
     return records.filter((item) => {
       const storeName = item.store || "Primary Store";
       const matchStore = selectedStore === "All" || storeName === selectedStore;
       const matchCategory =
         selectedCategory === "All" || item.category === selectedCategory;
-      return matchStore && matchCategory;
+      const matchStart = !effectiveStart || item.date >= effectiveStart;
+      const matchEnd = !effectiveEnd || item.date <= effectiveEnd;
+      return matchStore && matchCategory && matchStart && matchEnd;
     });
-  }, [records, selectedStore, selectedCategory]);
+  }, [
+    records,
+    selectedStore,
+    selectedCategory,
+    datePreset,
+    startDate,
+    endDate,
+    latestDataDate,
+  ]);
 
   const summary = useMemo(
     () => calculateKpiWithGrowth(filteredRecords),
@@ -242,10 +285,23 @@ export default function DashboardPage() {
       ? "AA • Healthy Growth"
       : "B • Margin Watch";
 
+  const hasActiveFilters =
+    selectedCategory !== "All" ||
+    datePreset !== "ALL" ||
+    Boolean(startDate) ||
+    Boolean(endDate);
+
+  const clearFilters = () => {
+    setSelectedCategory("All");
+    setDatePreset("ALL");
+    setStartDate("");
+    setEndDate("");
+  };
+
   const handleDataLoaded = async (newRecords: SalesRecord[]) => {
     setRecords(newRecords);
     setSelectedStore("All");
-    setSelectedCategory("All");
+    clearFilters();
     setIsCustomData(true);
 
     try {
@@ -284,7 +340,7 @@ export default function DashboardPage() {
     if (currentUser.role !== "OWNER") return;
     setRecords(INITIAL_DATA);
     setSelectedStore("All");
-    setSelectedCategory("All");
+    clearFilters();
     setIsCustomData(false);
     setWebhookCount(0);
 
@@ -400,6 +456,14 @@ export default function DashboardPage() {
                 </kbd>
               </button>
 
+              <NotificationCenter
+                records={records}
+                totalRevenue={summary.totalRevenue}
+                profitMargin={summary.profitMargin}
+                dbConnected={dbConnected}
+                onNavigate={setActiveTab}
+              />
+
               <button
                 type="button"
                 onClick={toggleDarkMode}
@@ -472,30 +536,91 @@ export default function DashboardPage() {
             })}
           </div>
 
-          {/* ফিল্টার ও এক্সপোর্ট বার */}
-          <div className="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3 print:hidden">
-            <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400">
-                <Filter className="w-3.5 h-3.5" />
+          {/* ক্যাটাগরি ও তারিখ ফিল্টার বার */}
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-3 print:hidden">
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* ক্যাটাগরি ড্রপডাউন */}
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400">
+                  <Filter className="w-3.5 h-3.5" />
+                </div>
+                <select
+                  id="category-filter"
+                  aria-label="Filter by Category"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="text-xs font-semibold border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat === "All" ? "All Categories" : cat}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <label
-                htmlFor="category-filter"
-                className="text-xs font-semibold text-slate-600 dark:text-slate-300"
-              >
-                Category:
-              </label>
-              <select
-                id="category-filter"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="text-xs font-semibold border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
+
+              <span className="hidden sm:inline text-slate-300 dark:text-slate-700">
+                |
+              </span>
+
+              {/* তারিখ প্রিসেট বাটনসমূহ */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-indigo-500 dark:text-cyan-400 mr-0.5" />
+                {(
+                  [
+                    { id: "ALL", label: "All Time" },
+                    { id: "7D", label: "Last 7 Days" },
+                    { id: "30D", label: "Last 30 Days" },
+                    { id: "CUSTOM", label: "Custom Range" },
+                  ] as { id: DatePreset; label: string }[]
+                ).map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => setDatePreset(preset.id)}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer ${
+                      datePreset === preset.id
+                        ? "bg-indigo-600 text-white shadow-2xs"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
                 ))}
-              </select>
+              </div>
+
+              {/* কাস্টম তারিখ নির্বাচন ইনপুট */}
+              {datePreset === "CUSTOM" && (
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="date"
+                    aria-label="Start Date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="text-xs font-mono border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+                  />
+                  <span className="text-xs text-slate-400">to</span>
+                  <input
+                    type="date"
+                    aria-label="End Date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="text-xs font-mono border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+                  />
+                </div>
+              )}
+
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-300 hover:text-rose-600 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                  Clear
+                </button>
+              )}
+
               <span className="text-xs font-mono text-slate-400 ml-1">
                 ({filteredRecords.length} records)
               </span>
